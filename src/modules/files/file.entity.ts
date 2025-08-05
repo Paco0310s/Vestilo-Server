@@ -1,19 +1,11 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Table, DataType } from 'sequelize-typescript';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 @Table({
   tableName: 'files',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  paranoid: true, // Habilita borrado lógico
 })
-export class File extends Model<File> {
-  @Column({
-    type: DataType.BIGINT,
-    primaryKey: true,
-    autoIncrement: true,
-  })
-  declare id: number;
-
+export class File extends BaseEntity {
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -56,16 +48,4 @@ export class File extends Model<File> {
     allowNull: true,
   })
   bucket: string;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'created_at',
-  })
-  created_at: Date;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at',
-  })
-  updated_at: Date;
 }

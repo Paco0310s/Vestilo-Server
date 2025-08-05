@@ -27,6 +27,11 @@ import { ProductAssignmentsModule } from './modules/product-assignments/product-
       database: process.env.DB_NAME || 'vestilo_db',
       autoLoadModels: true,
       synchronize: true, // Solo para desarrollo
+      define: {
+        timestamps: false, // Deshabilitamos timestamps automáticos
+        paranoid: false, // Deshabilitamos paranoid por defecto (se habilitará por tabla)
+        underscored: true, // Usamos snake_case para nombres de campos
+      },
     }),
     UsersModule,
     RolesModule,

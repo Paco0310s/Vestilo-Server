@@ -1,19 +1,10 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { Table, Column, DataType } from 'sequelize-typescript';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 @Table({
   tableName: 'barcode_assignments',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at'
 })
-export class BarcodeAssignment extends Model<BarcodeAssignment> {
-  @PrimaryKey
-  @AutoIncrement
-  @Column({
-    type: DataType.BIGINT,
-  })
-  declare id: number;
-
+export class BarcodeAssignment extends BaseEntity {
   @Column({
     type: DataType.BIGINT,
     allowNull: true,

@@ -1,19 +1,10 @@
-import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+import { Table, Column, DataType } from 'sequelize-typescript';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 @Table({
   tableName: 'seller_payments',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at'
 })
-export class SellerPayment extends Model<SellerPayment> {
-  @PrimaryKey
-  @AutoIncrement
-  @Column({
-    type: DataType.BIGINT,
-  })
-  declare id: number;
-
+export class SellerPayment extends BaseEntity {
   @Column({
     type: DataType.BIGINT,
     allowNull: true,

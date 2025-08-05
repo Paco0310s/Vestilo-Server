@@ -1,4 +1,4 @@
-import { IsEmail, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, IsString, MinLength, IsNumber } from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -16,4 +16,13 @@ export class CreateUserDto {
   @IsString()
   @MinLength(6)
   password?: string;
+
+  // Campos de auditoría (opcionales, se establecen automáticamente)
+  @IsOptional()
+  @IsNumber()
+  created_by?: number;
+
+  @IsOptional()
+  @IsNumber()
+  updated_by?: number;
 }

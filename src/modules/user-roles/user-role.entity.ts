@@ -1,19 +1,10 @@
-import { Column, Model, Table, DataType, ForeignKey } from 'sequelize-typescript';
+import { Column, Table, DataType } from 'sequelize-typescript';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 @Table({
   tableName: 'user_roles',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
 })
-export class UserRole extends Model<UserRole> {
-  @Column({
-    type: DataType.BIGINT,
-    primaryKey: true,
-    autoIncrement: true,
-  })
-  declare id: number;
-
+export class UserRole extends BaseEntity {
   @Column({
     type: DataType.BIGINT,
     field: 'user_id',
@@ -32,16 +23,4 @@ export class UserRole extends Model<UserRole> {
     field: 'comission_percent',
   })
   comission_percent: number;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'created_at',
-  })
-  created_at: Date;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at',
-  })
-  updated_at: Date;
 }

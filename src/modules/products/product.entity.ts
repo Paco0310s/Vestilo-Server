@@ -1,4 +1,5 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Table, DataType } from 'sequelize-typescript';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 export enum ProductStatus {
   ACTIVE = 'active',
@@ -8,18 +9,9 @@ export enum ProductStatus {
 
 @Table({
   tableName: 'products',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
+  paranoid: true, // Habilita borrado lógico
 })
-export class Product extends Model<Product> {
-  @Column({
-    type: DataType.BIGINT,
-    primaryKey: true,
-    autoIncrement: true,
-  })
-  declare id: number;
-
+export class Product extends BaseEntity {
   @Column({
     type: DataType.STRING,
     allowNull: false,
@@ -58,16 +50,4 @@ export class Product extends Model<Product> {
     defaultValue: ProductStatus.ACTIVE,
   })
   status: ProductStatus;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'created_at',
-  })
-  created_at: Date;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at',
-  })
-  updated_at: Date;
 }

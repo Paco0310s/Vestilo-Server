@@ -1,19 +1,10 @@
-import { Column, Model, Table, DataType } from 'sequelize-typescript';
+import { Column, Table, DataType } from 'sequelize-typescript';
+import { BaseEntity } from '../../common/entities/base.entity';
 
 @Table({
   tableName: 'sales',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at',
 })
-export class Sale extends Model<Sale> {
-  @Column({
-    type: DataType.BIGINT,
-    primaryKey: true,
-    autoIncrement: true,
-  })
-  declare id: number;
-
+export class Sale extends BaseEntity {
   @Column({
     type: DataType.BIGINT,
     field: 'product_id',
@@ -53,16 +44,4 @@ export class Sale extends Model<Sale> {
     field: 'comision_paid',
   })
   comision_paid: boolean;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'created_at',
-  })
-  created_at: Date;
-
-  @Column({
-    type: DataType.DATE,
-    field: 'updated_at',
-  })
-  updated_at: Date;
 }
