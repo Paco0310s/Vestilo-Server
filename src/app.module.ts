@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { APP_GUARD } from '@nestjs/core';
 import { UsersModule } from './modules/users/users.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { UserRolesModule } from './modules/user-roles/user-roles.module';
@@ -12,6 +13,8 @@ import { ProductsImagesModule } from './modules/products-images/products-images.
 import { SellerPaymentsModule } from './modules/seller-payments/seller-payments.module';
 import { BarcodeAssignmentsModule } from './modules/barcode-assignments/barcode-assignments.module';
 import { ProductAssignmentsModule } from './modules/product-assignments/product-assignments.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { GlobalJwtAuthGuard } from './modules/auth/guards/global-jwt-auth.guard';
 
 @Module({
   imports: [
@@ -44,6 +47,13 @@ import { ProductAssignmentsModule } from './modules/product-assignments/product-
     SellerPaymentsModule,
     BarcodeAssignmentsModule,
     ProductAssignmentsModule,
+    AuthModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: GlobalJwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}
