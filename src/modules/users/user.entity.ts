@@ -1,5 +1,8 @@
-import { Column, Table, DataType } from 'sequelize-typescript';
+import { Column, Table, DataType, HasMany } from 'sequelize-typescript';
 import { BaseEntity } from '../../common/entities/base.entity';
+import { UserRole } from '../user-roles/user-role.entity';
+import { Sale } from '../sales/sale.entity';
+import { ProductAssignment } from '../product-assignments/product-assignment.entity';
 
 @Table({
   tableName: 'users',
@@ -30,4 +33,14 @@ export class User extends BaseEntity {
     allowNull: true,
   })
   password: string;
+
+  // Relaciones
+  @HasMany(() => UserRole, { foreignKey: 'user_id', as: 'userRoles' })
+  userRoles: UserRole[];
+
+  @HasMany(() => Sale, { foreignKey: 'user_id', as: 'sales' })
+  sales: Sale[];
+
+  @HasMany(() => ProductAssignment, { foreignKey: 'user_id', as: 'productAssignments' })
+  productAssignments: ProductAssignment[];
 }

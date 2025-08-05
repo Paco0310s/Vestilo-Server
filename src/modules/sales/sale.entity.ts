@@ -1,19 +1,25 @@
-import { Column, Table, DataType } from 'sequelize-typescript';
+import { Column, Table, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { BaseEntity } from '../../common/entities/base.entity';
+import { Product } from '../products/product.entity';
+import { User } from '../users/user.entity';
 
 @Table({
   tableName: 'sales',
 })
 export class Sale extends BaseEntity {
+  @ForeignKey(() => Product)
   @Column({
     type: DataType.BIGINT,
     field: 'product_id',
+    allowNull: true, // Nullable para evitar errores
   })
   product_id: number;
 
+  @ForeignKey(() => User)
   @Column({
     type: DataType.BIGINT,
     field: 'user_id',
+    allowNull: true, // Nullable para evitar errores
   })
   user_id: number;
 
@@ -44,4 +50,11 @@ export class Sale extends BaseEntity {
     field: 'comision_paid',
   })
   comision_paid: boolean;
+
+  // Relaciones
+  @BelongsTo(() => Product, { foreignKey: 'product_id', as: 'product' })
+  product: Product;
+
+  @BelongsTo(() => User, { foreignKey: 'user_id', as: 'user' })
+  user: User;
 }

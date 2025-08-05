@@ -1,5 +1,6 @@
-import { Column, Table, DataType } from 'sequelize-typescript';
+import { Column, Table, DataType, HasMany } from 'sequelize-typescript';
 import { BaseEntity } from '../../common/entities/base.entity';
+import { ProductsImage } from '../products-images/products-image.entity';
 
 @Table({
   tableName: 'files',
@@ -48,4 +49,8 @@ export class File extends BaseEntity {
     allowNull: true,
   })
   bucket: string;
+
+  // Relaciones
+  @HasMany(() => ProductsImage, { foreignKey: 'file_id', as: 'productImages' })
+  productImages: ProductsImage[];
 }

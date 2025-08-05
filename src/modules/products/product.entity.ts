@@ -1,5 +1,9 @@
-import { Column, Table, DataType } from 'sequelize-typescript';
+import { Column, Table, DataType, HasMany } from 'sequelize-typescript';
 import { BaseEntity } from '../../common/entities/base.entity';
+import { Sale } from '../sales/sale.entity';
+import { ProductAssignment } from '../product-assignments/product-assignment.entity';
+import { ProductsImage } from '../products-images/products-image.entity';
+import { Barcode } from '../barcodes/barcode.entity';
 
 export enum ProductStatus {
   ACTIVE = 'active',
@@ -68,4 +72,17 @@ export class Product extends BaseEntity {
     defaultValue: ProductStatus.ACTIVE,
   })
   status: ProductStatus;
+
+  // Relaciones
+  @HasMany(() => Sale, { foreignKey: 'product_id', as: 'sales' })
+  sales: Sale[];
+
+  @HasMany(() => ProductAssignment, { foreignKey: 'product_id', as: 'productAssignments' })
+  productAssignments: ProductAssignment[];
+
+  @HasMany(() => ProductsImage, { foreignKey: 'product_id', as: 'images' })
+  images: ProductsImage[];
+
+  @HasMany(() => Barcode, { foreignKey: 'product_id', as: 'barcodes' })
+  barcodes: Barcode[];
 }

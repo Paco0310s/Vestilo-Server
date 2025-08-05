@@ -1,5 +1,6 @@
-import { Table, Column, DataType } from 'sequelize-typescript';
+import { Table, Column, DataType, BelongsTo, ForeignKey } from 'sequelize-typescript';
 import { BaseEntity } from '../../common/entities/base.entity';
+import { Product } from '../products/product.entity';
 
 @Table({
   tableName: 'barcodes',
@@ -23,4 +24,16 @@ export class Barcode extends BaseEntity {
     allowNull: true,
   })
   assigned_at: Date;
+
+  @ForeignKey(() => Product)
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: true,
+    field: 'product_id',
+  })
+  product_id: number;
+
+  // Relaciones
+  @BelongsTo(() => Product, { foreignKey: 'product_id', as: 'product' })
+  product: Product;
 }
