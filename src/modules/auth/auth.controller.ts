@@ -6,6 +6,7 @@ import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { AuthThrottle, QueryThrottle } from '../../common/decorators/throttle.decorators';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -13,6 +14,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @AuthThrottle()
   @Post('login')
   @ApiOperation({ summary: 'Iniciar sesión' })
   @ApiBody({ type: LoginDto })
@@ -37,11 +39,13 @@ export class AuthController {
     }
   })
   @ApiResponse({ status: 401, description: 'Credenciales inválidas' })
+  @ApiResponse({ status: 429, description: 'Demasiados intentos de login' })
   async login(@Body(ValidationPipe) loginDto: LoginDto) {
     return this.authService.login(loginDto);
   }
 
   @Public()
+  @AuthThrottle()
   @Post('register')
   @ApiOperation({ summary: 'Registrar nuevo usuario' })
   @ApiBody({ type: RegisterDto })
@@ -65,11 +69,13 @@ export class AuthController {
     }
   })
   @ApiResponse({ status: 409, description: 'El email ya está registrado' })
+  @ApiResponse({ status: 429, description: 'Demasiados intentos de registro' })
   async register(@Body(ValidationPipe) registerDto: RegisterDto) {
     return this.authService.register(registerDto);
   }
 
   @UseGuards(JwtAuthGuard)
+  @QueryThrottle()
   @Get('profile')
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Obtener perfil del usuario autenticado' })
@@ -90,6 +96,7 @@ export class AuthController {
     }
   })
   @ApiResponse({ status: 401, description: 'No autorizado' })
+  @ApiResponse({ status: 429, description: 'Demasiadas consultas' })
   async getProfile(@CurrentUser() user: any) {
     return this.authService.getProfile(user.id);
   }

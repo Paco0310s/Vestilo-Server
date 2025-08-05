@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { UsersModule } from './modules/users/users.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { UserRolesModule } from './modules/user-roles/user-roles.module';
@@ -15,12 +16,30 @@ import { BarcodeAssignmentsModule } from './modules/barcode-assignments/barcode-
 import { ProductAssignmentsModule } from './modules/product-assignments/product-assignments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { GlobalJwtAuthGuard } from './modules/auth/guards/global-jwt-auth.guard';
+import { SmartThrottlerGuard } from './common/guards/smart-throttler.guard';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ThrottlerModule.forRoot([
+      {
+        name: 'short',
+        ttl: 1000, // 1 segundo
+        limit: 10, // 10 requests por segundo POR IP
+      },
+      {
+        name: 'medium',
+        ttl: 10000, // 10 segundos
+        limit: 50, // 50 requests por 10 segundos POR IP
+      },
+      {
+        name: 'long',
+        ttl: 60000, // 1 minuto
+        limit: 200, // 200 requests por minuto POR IP
+      },
+    ]),
     SequelizeModule.forRoot({
       dialect: 'mysql',
       host: process.env.DB_HOST || 'localhost',
@@ -53,6 +72,10 @@ import { GlobalJwtAuthGuard } from './modules/auth/guards/global-jwt-auth.guard'
     {
       provide: APP_GUARD,
       useClass: GlobalJwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: SmartThrottlerGuard,
     },
   ],
 })
