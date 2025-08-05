@@ -17,18 +17,18 @@ export abstract class BaseService<T extends BaseEntity> {
   }
 
   async findAll(includeDeleted = false): Promise<T[]> {
-    const whereClause = includeDeleted ? {} : { deletedAt: { [Op.is]: null } };
+    const whereClause = includeDeleted ? {} : { deleted_at: { [Op.is]: null } };
     
     return await (this.model as any).findAll({
       where: whereClause,
-      order: [['createdAt', 'DESC']],
+      order: [['created_at', 'DESC']],
     });
   }
 
   async findOne(id: number, includeDeleted = false): Promise<T> {
     const whereClause = includeDeleted 
       ? { id } 
-      : { id, deletedAt: { [Op.is]: null } };
+      : { id, deleted_at: { [Op.is]: null } };
 
     const entity = await (this.model as any).findOne({
       where: whereClause,
@@ -58,7 +58,7 @@ export abstract class BaseService<T extends BaseEntity> {
     
     // Borrado lógico
     await entity.update({
-      deletedAt: new Date(),
+      deleted_at: new Date(),
       deleted_by: userId,
     });
 
@@ -68,12 +68,12 @@ export abstract class BaseService<T extends BaseEntity> {
   async restore(id: number, userId?: number): Promise<T> {
     const entity = await this.findOne(id, true); // Incluir borrados
     
-    if (!entity.deletedAt) {
+    if (!entity.deleted_at) {
       throw new NotFoundException(`El registro con ID ${id} no está eliminado`);
     }
 
     await entity.update({
-      deletedAt: null,
+      deleted_at: null,
       deleted_by: null,
       updated_by: userId,
     });
@@ -89,9 +89,9 @@ export abstract class BaseService<T extends BaseEntity> {
   async findDeleted(): Promise<T[]> {
     return await (this.model as any).findAll({
       where: {
-        deletedAt: { [Op.not]: null },
+        deleted_at: { [Op.not]: null },
       },
-      order: [['deletedAt', 'DESC']],
+      order: [['deleted_at', 'DESC']],
     });
   }
 }

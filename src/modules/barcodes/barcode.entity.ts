@@ -4,7 +4,11 @@ import { Product } from '../products/product.entity';
 
 @Table({
   tableName: 'barcodes',
+  timestamps: true, // Habilita timestamps
   paranoid: true, // Habilita borrado lógico
+  deletedAt: 'deleted_at', // Especifica el campo para borrado lógico
+  createdAt: 'created_at', // Especifica el campo de creación
+  updatedAt: 'updated_at', // Especifica el campo de actualización
 })
 export class Barcode extends BaseEntity {
   @Column({
