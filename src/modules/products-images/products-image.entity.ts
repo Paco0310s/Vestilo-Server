@@ -1,0 +1,28 @@
+import { Table, Column, Model, DataType, PrimaryKey, AutoIncrement } from 'sequelize-typescript';
+
+@Table({
+  tableName: 'products_images',
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
+})
+export class ProductsImage extends Model<ProductsImage> {
+  @PrimaryKey
+  @AutoIncrement
+  @Column({
+    type: DataType.BIGINT,
+  })
+  declare id: number;
+
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: true,
+  })
+  product_id: number;
+
+  @Column({
+    type: DataType.BIGINT,
+    allowNull: true,
+  })
+  file_id: number;
+}
