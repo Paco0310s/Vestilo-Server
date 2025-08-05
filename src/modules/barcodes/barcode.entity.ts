@@ -19,7 +19,7 @@ export class Barcode extends BaseEntity {
   format: string;
 
   @Column({
-    type: DataType.BIGINT,
+    type: DataType.DATE,
     allowNull: true,
   })
   assigned_at: Date;

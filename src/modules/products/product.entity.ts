@@ -31,6 +31,24 @@ export class Product extends BaseEntity {
   color: string;
 
   @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  size: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  brand: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: true,
+  })
+  category: string;
+
+  @Column({
     type: DataType.DECIMAL(10, 2),
     allowNull: true,
     field: 'purchase_price',

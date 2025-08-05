@@ -18,11 +18,11 @@ export class Sale extends BaseEntity {
   user_id: number;
 
   @Column({
-    type: DataType.BIGINT,
+    type: DataType.DATE,
     allowNull: true,
     field: 'sold_at',
   })
-  sold_at: number;
+  sold_at: Date;
 
   @Column({
     type: DataType.DECIMAL(10, 2),

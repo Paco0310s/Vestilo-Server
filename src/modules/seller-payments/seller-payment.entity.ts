@@ -18,7 +18,7 @@ export class SellerPayment extends BaseEntity {
   amount: number;
 
   @Column({
-    type: DataType.BIGINT,
+    type: DataType.DATE,
     allowNull: true,
   })
   paid_at: Date;

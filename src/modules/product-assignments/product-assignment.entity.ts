@@ -18,13 +18,13 @@ export class ProductAssignment extends BaseEntity {
   product_id: number;
 
   @Column({
-    type: DataType.BIGINT,
+    type: DataType.DATE,
     allowNull: true,
   })
   assigned_at: Date;
 
   @Column({
-    type: DataType.BIGINT,
+    type: DataType.DATE,
     allowNull: true,
   })
   completed_at: Date;
