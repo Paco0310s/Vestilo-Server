@@ -4,8 +4,8 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { GetUser } from './decorators/get-user.decorator';
 import { Public } from './decorators/public.decorator';
+import { CurrentUser } from './decorators/current-user.decorator';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -90,7 +90,7 @@ export class AuthController {
     }
   })
   @ApiResponse({ status: 401, description: 'No autorizado' })
-  async getProfile(@GetUser() user: any) {
+  async getProfile(@CurrentUser() user: any) {
     return this.authService.getProfile(user.id);
   }
 }

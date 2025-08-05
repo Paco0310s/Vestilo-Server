@@ -1,14 +1,13 @@
-import { Controller, Post, Body, Patch, Param, ParseIntPipe, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, ParseIntPipe, ValidationPipe, Get } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { BaseController } from '../../common/controllers/base.controller';
 import { Product } from './product.entity';
-import { Public } from '../auth/decorators/public.decorator';
+import { AdminOnly, SellerOnly, AdminOrSeller, CurrentUser } from '../auth/decorators';
 
 @ApiTags('products')
-@Public() // Temporalmente público
 @Controller('products')
 export class ProductsController extends BaseController<Product> {
   constructor(private readonly productsService: ProductsService) {
@@ -16,20 +15,47 @@ export class ProductsController extends BaseController<Product> {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Crear un nuevo producto' })
+  @AdminOrSeller() // Administradores y vendedores pueden crear productos
+  @ApiOperation({ summary: 'Crear un nuevo producto (Administradores y Vendedores)' })
   @ApiResponse({ status: 201, description: 'Producto creado exitosamente', type: Product })
-  create(@Body(ValidationPipe) createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  async createProduct(
+    @Body(ValidationPipe) createProductDto: CreateProductDto,
+    @CurrentUser() currentUser: any,
+  ) {
+    return this.productsService.create(createProductDto, currentUser.id);
   }
 
   @Patch(':id')
-  @ApiOperation({ summary: 'Actualizar un producto' })
+  @AdminOrSeller() // Administradores y vendedores pueden actualizar productos
+  @ApiOperation({ summary: 'Actualizar un producto (Administradores y Vendedores)' })
   @ApiParam({ name: 'id', description: 'ID del producto', type: 'number' })
   @ApiResponse({ status: 200, description: 'Producto actualizado exitosamente', type: Product })
-  update(
+  async updateProduct(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateProductDto: UpdateProductDto,
+    @CurrentUser() currentUser: any,
   ) {
-    return this.productsService.update(id, updateProductDto);
+    return this.productsService.update(id, updateProductDto, currentUser.id);
+  }
+
+  // Listar productos - Todos los usuarios autenticados pueden ver
+  @Get()
+  @ApiOperation({ summary: 'Ver todos los productos (Usuarios autenticados)' })
+  @ApiResponse({ status: 200, description: 'Lista de productos obtenida exitosamente' })
+  findAllProducts() {
+    return this.productsService.findAll();
+  }
+
+  // Eliminar productos - Solo administradores
+  @Patch(':id')
+  @AdminOnly() // Solo administradores pueden eliminar productos
+  @ApiOperation({ summary: 'Eliminar un producto (Solo Administradores)' })
+  @ApiParam({ name: 'id', description: 'ID del producto a eliminar', type: 'number' })
+  @ApiResponse({ status: 200, description: 'Producto eliminado exitosamente (soft delete)' })
+  async removeProduct(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: any,
+  ) {
+    return this.productsService.remove(id, currentUser.id);
   }
 }
