@@ -18,7 +18,7 @@ export abstract class BaseEntity extends Model {
     defaultValue: DataType.NOW,
     comment: 'Fecha y hora de creación del registro',
   })
-  created_at: Date;
+  declare created_at: Date;
 
   @ApiProperty({ description: 'Fecha y hora de última actualización del registro', example: '2024-01-01T10:00:00Z' })
   @Column({
@@ -27,7 +27,7 @@ export abstract class BaseEntity extends Model {
     defaultValue: DataType.NOW,
     comment: 'Fecha y hora de última actualización del registro',
   })
-  updated_at: Date;
+  declare updated_at: Date;
 
   @ApiProperty({ description: 'Fecha y hora de eliminación lógica del registro', example: null, required: false })
   @Column({
@@ -36,7 +36,7 @@ export abstract class BaseEntity extends Model {
     defaultValue: null,
     comment: 'Fecha y hora de eliminación lógica del registro',
   })
-  deleted_at: Date;
+  declare deleted_at: Date;
 
   @ApiProperty({ description: 'ID del usuario que creó el registro', example: 1, required: false })
   @Column({
@@ -44,7 +44,7 @@ export abstract class BaseEntity extends Model {
     allowNull: true,
     comment: 'ID del usuario que creó el registro',
   })
-  created_by: number;
+  declare created_by: number;
 
   @ApiProperty({ description: 'ID del usuario que actualizó el registro', example: 1, required: false })
   @Column({
@@ -52,7 +52,7 @@ export abstract class BaseEntity extends Model {
     allowNull: true,
     comment: 'ID del usuario que actualizó el registro',
   })
-  updated_by: number;
+  declare updated_by: number;
 
   @ApiProperty({ description: 'ID del usuario que eliminó el registro', example: 1, required: false })
   @Column({
@@ -60,5 +60,5 @@ export abstract class BaseEntity extends Model {
     allowNull: true,
     comment: 'ID del usuario que eliminó el registro',
   })
-  deleted_by: number;
+  declare deleted_by: number;
 }

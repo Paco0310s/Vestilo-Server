@@ -15,8 +15,8 @@ import { SellerPaymentsModule } from './modules/seller-payments/seller-payments.
 import { BarcodeAssignmentsModule } from './modules/barcode-assignments/barcode-assignments.module';
 import { ProductAssignmentsModule } from './modules/product-assignments/product-assignments.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { GlobalJwtAuthGuard } from './modules/auth/guards/global-jwt-auth.guard';
 import { SmartThrottlerGuard } from './common/guards/smart-throttler.guard';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -71,7 +71,7 @@ import { SmartThrottlerGuard } from './common/guards/smart-throttler.guard';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: GlobalJwtAuthGuard,
+      useClass: JwtAuthGuard,
     },
     {
       provide: APP_GUARD,

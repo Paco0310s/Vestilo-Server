@@ -1,12 +1,12 @@
-import { Controller, Post, Body, UseGuards, Get, ValidationPipe } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, ValidationPipe, UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthThrottle, QueryThrottle } from '../../common/decorators/throttle.decorators';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -24,17 +24,12 @@ export class AuthController {
     schema: {
       type: 'object',
       properties: {
-        access_token: { type: 'string' },
-        user: {
-          type: 'object',
-          properties: {
-            id: { type: 'number' },
-            email: { type: 'string' },
-            name: { type: 'string' },
-            phone: { type: 'string' },
-            roles: { type: 'array', items: { type: 'string' } }
-          }
-        }
+        id: { type: 'number' },
+        email: { type: 'string' },
+        name: { type: 'string' },
+        phone: { type: 'string' },
+        roles: { type: 'array', items: { type: 'string' } },
+        token: { type: 'string' },
       }
     }
   })
@@ -62,7 +57,9 @@ export class AuthController {
             id: { type: 'number' },
             email: { type: 'string' },
             name: { type: 'string' },
-            phone: { type: 'string' }
+            phone: { type: 'string' },
+            roles: { type: 'array', items: { type: 'string' } },
+            token: { type: 'string' }
           }
         }
       }
@@ -90,14 +87,15 @@ export class AuthController {
         name: { type: 'string' },
         phone: { type: 'string' },
         roles: { type: 'array', items: { type: 'string' } },
-        created_at: { type: 'string' },
-        updated_at: { type: 'string' }
+        token: { type: 'string' },
       }
     }
   })
   @ApiResponse({ status: 401, description: 'No autorizado' })
   @ApiResponse({ status: 429, description: 'Demasiadas consultas' })
   async getProfile(@CurrentUser() user: any) {
+    if (!user) throw new UnauthorizedException('No se pudo obtener el perfil del usuario');
+
     return this.authService.getProfile(user.id);
   }
 }

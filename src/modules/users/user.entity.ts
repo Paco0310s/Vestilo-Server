@@ -19,14 +19,14 @@ export class User extends BaseEntity {
     type: DataType.STRING,
     allowNull: false,
   })
-  name: string;
+  declare name: string;
 
   @ApiProperty({ description: 'Teléfono del usuario', example: '+1234567890', required: false })
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  phone: string;
+  declare phone: string;
 
   @ApiProperty({ description: 'Email del usuario', example: 'juan@example.com', required: false })
   @Column({
@@ -34,25 +34,25 @@ export class User extends BaseEntity {
     allowNull: true,
     unique: true,
   })
-  email: string;
+  declare email?: string;
 
   @ApiProperty({ description: 'Contraseña del usuario', example: 'password123', required: false })
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  password: string;
+  declare password: string;
 
   // Relaciones
   @ApiProperty({ description: 'Roles asignados al usuario', type: () => [UserRole], required: false })
   @HasMany(() => UserRole, { foreignKey: 'user_id', as: 'userRoles' })
-  userRoles: UserRole[];
+  declare userRoles: UserRole[];
 
   @ApiProperty({ description: 'Ventas realizadas por el usuario', type: () => [Sale], required: false })
   @HasMany(() => Sale, { foreignKey: 'user_id', as: 'sales' })
-  sales: Sale[];
+  declare sales: Sale[];
 
   @ApiProperty({ description: 'Asignaciones de productos del usuario', type: () => [ProductAssignment], required: false })
   @HasMany(() => ProductAssignment, { foreignKey: 'user_id', as: 'productAssignments' })
-  productAssignments: ProductAssignment[];
+  declare productAssignments: ProductAssignment[];
 }
