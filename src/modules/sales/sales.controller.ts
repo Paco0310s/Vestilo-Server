@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Patch, Param, ParseIntPipe, Req } from '@nestjs/common';
 import { SalesService } from './sales.service';
-import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { Sale } from './sale.entity';
 import { CreateSaleDto } from './dto/create-sale.dto';
@@ -8,6 +8,7 @@ import { UpdateSaleDto } from './dto/update-sale.dto';
 import { Request } from 'express';
 
 @ApiTags('Sales')
+@ApiBearerAuth('JWT-auth')
 @Controller('sales')
 export class SalesController extends BaseController<Sale, CreateSaleDto, UpdateSaleDto> {
   constructor(private readonly salesService: SalesService) {

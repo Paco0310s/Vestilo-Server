@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Patch, Param, ParseIntPipe, Req } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { File } from './file.entity';
 import { CreateFileDto } from './dto/create-file.dto';
@@ -8,6 +8,7 @@ import { UpdateFileDto } from './dto/update-file.dto';
 import { Request } from 'express';
 
 @ApiTags('Files')
+@ApiBearerAuth('JWT-auth')
 @Controller('files')
 export class FilesController extends BaseController<File, CreateFileDto, UpdateFileDto> {
   constructor(private readonly filesService: FilesService) {

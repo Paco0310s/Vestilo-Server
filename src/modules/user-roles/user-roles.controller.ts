@@ -1,6 +1,6 @@
 import { Controller, Post, Body, Patch, Param, ParseIntPipe, Req } from '@nestjs/common';
 import { UserRolesService } from './user-roles.service';
-import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { UserRole } from './user-role.entity';
 import { CreateUserRoleDto } from './dto/create-user-role.dto';
@@ -8,6 +8,7 @@ import { UpdateUserRoleDto } from './dto/update-user-role.dto';
 import { Request } from 'express';
 
 @ApiTags('User Roles')
+@ApiBearerAuth('JWT-auth')
 @Controller('user-roles')
 export class UserRolesController extends BaseController<UserRole, CreateUserRoleDto, UpdateUserRoleDto> {
   constructor(private readonly userRolesService: UserRolesService) {

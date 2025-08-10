@@ -4,10 +4,11 @@ import { CreateProductsImageDto } from './dto/create-products-image.dto';
 import { UpdateProductsImageDto } from './dto/update-products-image.dto';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { ProductsImage } from './products-image.entity';
-import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { Request } from 'express';
 
 @ApiTags('Products Images')
+@ApiBearerAuth('JWT-auth')
 @Controller('products-images')
 export class ProductsImagesController extends BaseController<ProductsImage, CreateProductsImageDto, UpdateProductsImageDto> {
   constructor(private readonly productsImagesService: ProductsImagesService) {

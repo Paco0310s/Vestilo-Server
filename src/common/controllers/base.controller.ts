@@ -6,7 +6,7 @@ import { AuditInterceptor } from '../interceptors/audit.interceptor';
 import { Request } from 'express';
 
 @UseInterceptors(AuditInterceptor)
-@ApiBearerAuth()
+@ApiBearerAuth('JWT-auth')
 export abstract class BaseController<T extends BaseEntity, CreateDto = any, UpdateDto = any> {
   constructor(protected readonly service: BaseService<T>) {}
 

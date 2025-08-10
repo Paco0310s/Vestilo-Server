@@ -2,12 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, Pars
 import { SellerPaymentsService } from './seller-payments.service';
 import { CreateSellerPaymentDto } from './dto/create-seller-payment.dto';
 import { UpdateSellerPaymentDto } from './dto/update-seller-payment.dto';
-import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { SellerPayment } from './seller-payment.entity';
 import { Request } from 'express';
 
 @ApiTags('Seller Payments')
+@ApiBearerAuth('JWT-auth')
 @Controller('seller-payments')
 export class SellerPaymentsController extends BaseController<SellerPayment, CreateSellerPaymentDto, UpdateSellerPaymentDto> {
   constructor(private readonly sellerPaymentsService: SellerPaymentsService) {

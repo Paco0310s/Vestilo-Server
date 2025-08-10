@@ -2,12 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, Pars
 import { ProductAssignmentsService } from './product-assignments.service';
 import { CreateProductAssignmentDto } from './dto/create-product-assignment.dto';
 import { UpdateProductAssignmentDto } from './dto/update-product-assignment.dto';
-import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { ProductAssignment } from './product-assignment.entity';
 import { Request } from 'express';
 
 @ApiTags('Product Assignments')
+@ApiBearerAuth('JWT-auth')
 @Controller('product-assignments')
 export class ProductAssignmentsController extends BaseController<ProductAssignment, CreateProductAssignmentDto, UpdateProductAssignmentDto> {
   constructor(private readonly productAssignmentsService: ProductAssignmentsService) {
