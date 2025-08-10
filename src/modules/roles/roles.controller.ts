@@ -16,7 +16,6 @@ export class RolesController extends BaseController<Role, CreateRoleDto, UpdateR
   }
 
   @Post()
-  @ApiBearerAuth('JWT-auth')
   @ApiBody({ 
     type: CreateRoleDto,
     description: 'Datos para crear un nuevo rol'
