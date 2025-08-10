@@ -8,7 +8,7 @@ import { SellerPayment } from './seller-payment.entity';
 
 @ApiTags('Seller Payments')
 @Controller('seller-payments')
-export class SellerPaymentsController extends BaseController<SellerPayment> {
+export class SellerPaymentsController extends BaseController<SellerPayment, CreateSellerPaymentDto, UpdateSellerPaymentDto> {
   constructor(private readonly sellerPaymentsService: SellerPaymentsService) {
     super(sellerPaymentsService);
   }

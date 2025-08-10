@@ -8,7 +8,7 @@ import { ProductAssignment } from './product-assignment.entity';
 
 @ApiTags('Product Assignments')
 @Controller('product-assignments')
-export class ProductAssignmentsController extends BaseController<ProductAssignment> {
+export class ProductAssignmentsController extends BaseController<ProductAssignment, CreateProductAssignmentDto, UpdateProductAssignmentDto> {
   constructor(private readonly productAssignmentsService: ProductAssignmentsService) {
     super(productAssignmentsService);
   }

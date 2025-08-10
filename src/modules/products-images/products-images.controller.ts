@@ -8,7 +8,7 @@ import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Products Images')
 @Controller('products-images')
-export class ProductsImagesController extends BaseController<ProductsImage> {
+export class ProductsImagesController extends BaseController<ProductsImage, CreateProductsImageDto, UpdateProductsImageDto> {
   constructor(private readonly productsImagesService: ProductsImagesService) {
     super(productsImagesService);
   }

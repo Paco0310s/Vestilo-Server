@@ -6,14 +6,14 @@ import { AuditInterceptor } from '../interceptors/audit.interceptor';
 
 @UseInterceptors(AuditInterceptor)
 @ApiBearerAuth()
-export abstract class BaseController<T extends BaseEntity> {
+export abstract class BaseController<T extends BaseEntity, CreateDto = any, UpdateDto = any> {
   constructor(protected readonly service: BaseService<T>) {}
 
   @Post()
   @ApiOperation({ summary: 'Crear un nuevo registro' })
   @ApiResponse({ status: 201, description: 'Registro creado exitosamente' })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
-  create(@Body() createDto: any) {
+  create(@Body() createDto: CreateDto) {
     return this.service.create(createDto);
   }
 
@@ -65,7 +65,7 @@ export abstract class BaseController<T extends BaseEntity> {
   @ApiResponse({ status: 200, description: 'Registro actualizado exitosamente' })
   @ApiResponse({ status: 404, description: 'Registro no encontrado' })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: any) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateDto) {
     return this.service.update(id, updateDto);
   }
 
