@@ -1,15 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, ParseIntPipe } from '@nestjs/common';
 import { ProductsImagesService } from './products-images.service';
 import { CreateProductsImageDto } from './dto/create-products-image.dto';
 import { UpdateProductsImageDto } from './dto/update-products-image.dto';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { ProductsImage } from './products-image.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('Products Images')
 @Controller('products-images')
 export class ProductsImagesController extends BaseController<ProductsImage, CreateProductsImageDto, UpdateProductsImageDto> {
   constructor(private readonly productsImagesService: ProductsImagesService) {
     super(productsImagesService);
+  }
+
+  @Post()
+  @ApiBody({ 
+    type: CreateProductsImageDto,
+    description: 'Datos para asociar una imagen a un producto'
+  })
+  create(@Body() createProductsImageDto: CreateProductsImageDto) {
+    return super.create(createProductsImageDto);
+  }
+
+  @Patch(':id')
+  @ApiBody({ 
+    type: UpdateProductsImageDto,
+    description: 'Datos para actualizar la asociación de imagen'
+  })
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateProductsImageDto: UpdateProductsImageDto) {
+    return super.update(id, updateProductsImageDto);
   }
 }

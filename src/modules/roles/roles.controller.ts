@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Patch, Param, ParseIntPipe, ValidationPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import { BaseController } from '../../common/controllers/base.controller';
 import { Role } from './role.entity';
@@ -11,5 +11,23 @@ import { UpdateRoleDto } from './dto/update-role.dto';
 export class RolesController extends BaseController<Role, CreateRoleDto, UpdateRoleDto> {
   constructor(private readonly rolesService: RolesService) {
     super(rolesService);
+  }
+
+  @Post()
+  @ApiBody({ 
+    type: CreateRoleDto,
+    description: 'Datos para crear un nuevo rol'
+  })
+  create(@Body() createRoleDto: CreateRoleDto) {
+    return super.create(createRoleDto);
+  }
+
+  @Patch(':id')
+  @ApiBody({ 
+    type: UpdateRoleDto,
+    description: 'Datos para actualizar el rol'
+  })
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateRoleDto: UpdateRoleDto) {
+    return super.update(id, updateRoleDto);
   }
 }
