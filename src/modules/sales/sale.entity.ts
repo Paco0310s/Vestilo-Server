@@ -5,6 +5,11 @@ import { User } from '../users/user.entity';
 
 @Table({
   tableName: 'sales',
+  timestamps: true, // Enable timestamps
+  paranoid: true, // Enable soft delete
+  deletedAt: 'deleted_at', // Specify the field for soft delete
+  createdAt: 'created_at', // Specify the field for creation
+  updatedAt: 'updated_at', // Specify the field for update
 })
 export class Sale extends BaseEntity {
   @ForeignKey(() => Product)
@@ -13,7 +18,7 @@ export class Sale extends BaseEntity {
     field: 'product_id',
     allowNull: true, // Nullable para evitar errores
   })
-  product_id: number;
+  declare product_id: number;
 
   @ForeignKey(() => User)
   @Column({
@@ -21,27 +26,27 @@ export class Sale extends BaseEntity {
     field: 'user_id',
     allowNull: true, // Nullable para evitar errores
   })
-  user_id: number;
+  declare user_id: number;
 
   @Column({
     type: DataType.DATE,
     allowNull: true,
     field: 'sold_at',
   })
-  sold_at: Date;
+  declare sold_at: Date;
 
   @Column({
     type: DataType.DECIMAL(10, 2),
     allowNull: true,
     field: 'sale_price',
   })
-  sale_price: number;
+  declare sale_price: number;
 
   @Column({
     type: DataType.DECIMAL(8, 2),
     allowNull: true,
   })
-  comision: number;
+  declare comision: number;
 
   @Column({
     type: DataType.BOOLEAN,
@@ -49,12 +54,12 @@ export class Sale extends BaseEntity {
     defaultValue: false,
     field: 'comision_paid',
   })
-  comision_paid: boolean;
+  declare comision_paid: boolean;
 
-  // Relaciones
+  // Relations
   @BelongsTo(() => Product, { foreignKey: 'product_id', as: 'product' })
-  product: Product;
+  declare product: Product;
 
   @BelongsTo(() => User, { foreignKey: 'user_id', as: 'user' })
-  user: User;
+  declare user: User;
 }

@@ -5,35 +5,40 @@ import { Role } from '../roles/role.entity';
 
 @Table({
   tableName: 'user_roles',
+  timestamps: true, // Enable timestamps
+  paranoid: true, // Enable soft delete
+  deletedAt: 'deleted_at', // Specify the field for soft delete
+  createdAt: 'created_at', // Specify the field for creation
+  updatedAt: 'updated_at', // Specify the field for update
 })
 export class UserRole extends BaseEntity {
   @ForeignKey(() => User)
   @Column({
     type: DataType.BIGINT,
     field: 'user_id',
-    allowNull: true, // Nullable para evitar errores
+    allowNull: true, 
   })
-  user_id: number;
+  declare user_id: number;
 
   @ForeignKey(() => Role)
   @Column({
     type: DataType.BIGINT,
     field: 'role_id',
-    allowNull: true, // Nullable para evitar errores
+    allowNull: true, 
   })
-  role_id: number;
+  declare role_id: number;
 
   @Column({
     type: DataType.DECIMAL(8, 2),
     allowNull: true,
     field: 'comission_percent',
   })
-  comission_percent: number;
+  declare comission_percent: number;
 
-  // Relaciones
+  // Relations
   @BelongsTo(() => User, { foreignKey: 'user_id', as: 'user' })
-  user: User;
+  declare user: User;
 
   @BelongsTo(() => Role, { foreignKey: 'role_id', as: 'role' })
-  role: Role;
+  declare role: Role;
 }

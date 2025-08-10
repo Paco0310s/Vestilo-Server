@@ -12,31 +12,31 @@ export class ProductAssignment extends BaseEntity {
     type: DataType.BIGINT,
     allowNull: true,
   })
-  user_id: number;
+  declare user_id: number;
 
   @ForeignKey(() => Product)
   @Column({
     type: DataType.BIGINT,
     allowNull: true,
   })
-  product_id: number;
+  declare product_id: number;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: false,
+  })
+  declare assigned_at: Date;
 
   @Column({
     type: DataType.DATE,
     allowNull: true,
   })
-  assigned_at: Date;
-
-  @Column({
-    type: DataType.DATE,
-    allowNull: true,
-  })
-  completed_at: Date;
+  declare return_at: Date;
 
   // Relaciones
   @BelongsTo(() => User, { foreignKey: 'user_id', as: 'user' })
-  user: User;
+  declare user: User;
 
   @BelongsTo(() => Product, { foreignKey: 'product_id', as: 'product' })
-  product: Product;
+  declare product: Product;
 }

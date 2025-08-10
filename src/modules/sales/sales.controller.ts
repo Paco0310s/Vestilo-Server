@@ -1,46 +1,12 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { SalesService } from './sales.service';
-import { CreateSaleDto } from './dto/create-sale.dto';
-import { UpdateSaleDto } from './dto/update-sale.dto';
-
+import { ApiTags } from '@nestjs/swagger';
+import { BaseController } from 'src/common/controllers/base.controller';
+import { Sale } from './sale.entity';
+@ApiTags('Sales')
 @Controller('sales')
-export class SalesController {
-  constructor(private readonly salesService: SalesService) {}
-
-  @Post()
-  create(@Body(ValidationPipe) createSaleDto: CreateSaleDto) {
-    return this.salesService.create(createSaleDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.salesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.salesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body(ValidationPipe) updateSaleDto: UpdateSaleDto,
-  ) {
-    return this.salesService.update(+id, updateSaleDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.salesService.remove(+id);
+export class SalesController extends BaseController<Sale> {
+  constructor(private readonly salesService: SalesService) {
+    super(salesService);
   }
 }

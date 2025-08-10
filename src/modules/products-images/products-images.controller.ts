@@ -2,33 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe } fro
 import { ProductsImagesService } from './products-images.service';
 import { CreateProductsImageDto } from './dto/create-products-image.dto';
 import { UpdateProductsImageDto } from './dto/update-products-image.dto';
+import { BaseController } from 'src/common/controllers/base.controller';
+import { ProductsImage } from './products-image.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Products Images')
 @Controller('products-images')
-export class ProductsImagesController {
-  constructor(private readonly productsImagesService: ProductsImagesService) {}
-
-  @Post()
-  create(@Body(ValidationPipe) createProductsImageDto: CreateProductsImageDto) {
-    return this.productsImagesService.create(createProductsImageDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.productsImagesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.productsImagesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body(ValidationPipe) updateProductsImageDto: UpdateProductsImageDto) {
-    return this.productsImagesService.update(+id, updateProductsImageDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsImagesService.remove(+id);
+export class ProductsImagesController extends BaseController<ProductsImage> {
+  constructor(private readonly productsImagesService: ProductsImagesService) {
+    super(productsImagesService);
   }
 }

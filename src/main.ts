@@ -4,13 +4,14 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { globalValidationPipe } from './common/pipes/global-validation.pipe';
+import { envs } from './common/config/envs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
   // CORS para permitir conexiones del frontend
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3200',
+    origin: envs.allowedOrigins,
     credentials: true,
   });
 
@@ -47,15 +48,14 @@ async function bootstrap() {
       3. Los endpoints muestran qué rol necesitas
     `)
     .setVersion('1.0')
-    .setContact('Vestilo Team', 'https://vestilo.com', 'support@vestilo.com')
+    .setContact('Vestilo Team', 'https://vestilo.pacosotelo.com', 'paco.sotelo0310@gmail.com')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
-    .addTag('auth', '🔐 Autenticación y autorización')
-    .addTag('users', '👥 Gestión de usuarios')
-    .addTag('roles', '🎭 Gestión de roles')
-    .addTag('products', '📦 Gestión de productos')
-    .addTag('sales', '💰 Gestión de ventas')
-    .addTag('files', '🗂️ Gestión de archivos')
-    .addTag('audit', '📊 Funcionalidades de auditoría')
+    .addTag('Auth', '🔐 Autenticación y autorización')
+    .addTag('Users', '👥 Gestión de usuarios')
+    .addTag('Roles', '🎭 Gestión de roles')
+    .addTag('Products', '📦 Gestión de productos')
+    .addTag('Sales', '💰 Gestión de ventas')
+    .addTag('Files', '🗂️ Gestión de archivos')
     .addBearerAuth(
       {
         type: 'http',
@@ -68,7 +68,7 @@ async function bootstrap() {
       'JWT-auth', // Este es el nombre de referencia para usar en @ApiBearerAuth()
     )
     .addServer('http://localhost:3200', 'Servidor de Desarrollo')
-    .addServer('https://api.vestilo.com', 'Servidor de Producción')
+    .addServer('https://vestilo.pacosotelo.com', 'Servidor de Producción')
     .build();
   
   const document = SwaggerModule.createDocument(app, config);
@@ -85,10 +85,10 @@ async function bootstrap() {
       .swagger-ui .info .title { color: #3b82f6 }
     `,
   });
-  
-  console.log(`🚀 Servidor iniciado en puerto ${process.env.PORT ?? 3200}`);
-  console.log(`📚 Documentación disponible en http://localhost:${process.env.PORT ?? 3200}/api/docs`);
-  
-  await app.listen(process.env.PORT ?? 3200);
+
+  console.log(`🚀 Servidor iniciado en puerto ${envs.port}`);
+  console.log(`📚 Documentación disponible en http://localhost:${envs.port}/api/docs`);
+
+  await app.listen(envs.port);
 }
 bootstrap();

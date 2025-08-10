@@ -4,21 +4,21 @@ import { BaseEntity } from '../../common/entities/base.entity';
 import { Sale } from '../sales/sale.entity';
 import { ProductAssignment } from '../product-assignments/product-assignment.entity';
 import { ProductsImage } from '../products-images/products-image.entity';
-import { Barcode } from '../barcodes/barcode.entity';
 
 export enum ProductStatus {
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
-  OUT_OF_STOCK = 'out_of_stock',
+  IN_STOCK = 'in_stock',
+  ASSIGNED = 'assigned',
+  SOLD = 'sold',
+  RETURNED = 'returned',
 }
 
 @Table({
   tableName: 'products',
-  timestamps: true, // Habilita timestamps
-  paranoid: true, // Habilita borrado lógico
-  deletedAt: 'deleted_at', // Especifica el campo para borrado lógico
-  createdAt: 'created_at', // Especifica el campo de creación
-  updatedAt: 'updated_at', // Especifica el campo de actualización
+  timestamps: true, // Enable timestamps
+  paranoid: true, // Enable soft delete
+  deletedAt: 'deleted_at', // Specify the field for soft delete
+  createdAt: 'created_at', // Specify the field for creation
+  updatedAt: 'updated_at', // Specify the field for update
 })
 export class Product extends BaseEntity {
   @ApiProperty({ description: 'Nombre del producto', example: 'Camiseta Polo' })
@@ -26,42 +26,28 @@ export class Product extends BaseEntity {
     type: DataType.STRING,
     allowNull: false,
   })
-  name: string;
+  declare name: string;
 
   @ApiProperty({ description: 'Descripción del producto', example: 'Camiseta polo de algodón 100%', required: false })
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  description: string;
+  declare description: string;
 
   @ApiProperty({ description: 'Color del producto', example: 'Azul', required: false })
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  color: string;
+  declare color: string;
 
   @ApiProperty({ description: 'Talla del producto', example: 'M', required: false })
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
-  size: string;
-
-  @ApiProperty({ description: 'Marca del producto', example: 'Nike', required: false })
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  brand: string;
-
-  @ApiProperty({ description: 'Categoría del producto', example: 'Ropa deportiva', required: false })
-  @Column({
-    type: DataType.STRING,
-    allowNull: true,
-  })
-  category: string;
+  declare size: string;
 
   @ApiProperty({ description: 'Precio de compra', example: 25.50, required: false })
   @Column({
@@ -69,7 +55,7 @@ export class Product extends BaseEntity {
     allowNull: true,
     field: 'purchase_price',
   })
-  purchase_price: number;
+  declare purchase_price: number;
 
   @ApiProperty({ description: 'Precio de venta', example: 45.99, required: false })
   @Column({
@@ -77,35 +63,31 @@ export class Product extends BaseEntity {
     allowNull: true,
     field: 'sale_price',
   })
-  sale_price: number;
+  declare sale_price: number;
 
   @ApiProperty({ 
     description: 'Estado del producto', 
-    example: ProductStatus.ACTIVE,
+    example: ProductStatus.IN_STOCK,
     enum: ProductStatus,
-    default: ProductStatus.ACTIVE 
+    default: ProductStatus.IN_STOCK
   })
   @Column({
     type: DataType.ENUM(...Object.values(ProductStatus)),
     allowNull: false,
-    defaultValue: ProductStatus.ACTIVE,
+    defaultValue: ProductStatus.IN_STOCK,
   })
-  status: ProductStatus;
+  declare status: ProductStatus;
 
-  // Relaciones
+  // Relations
   @ApiProperty({ description: 'Ventas relacionadas con este producto', type: () => [Sale], required: false })
   @HasMany(() => Sale, { foreignKey: 'product_id', as: 'sales' })
-  sales: Sale[];
+  declare sales: Sale[];
 
   @ApiProperty({ description: 'Asignaciones del producto', type: () => [ProductAssignment], required: false })
   @HasMany(() => ProductAssignment, { foreignKey: 'product_id', as: 'productAssignments' })
-  productAssignments: ProductAssignment[];
+  declare productAssignments: ProductAssignment[];
 
   @ApiProperty({ description: 'Imágenes del producto', type: () => [ProductsImage], required: false })
   @HasMany(() => ProductsImage, { foreignKey: 'product_id', as: 'images' })
-  images: ProductsImage[];
-
-  @ApiProperty({ description: 'Códigos de barras del producto', type: () => [Barcode], required: false })
-  @HasMany(() => Barcode, { foreignKey: 'product_id', as: 'barcodes' })
-  barcodes: Barcode[];
+  declare images: ProductsImage[];
 }

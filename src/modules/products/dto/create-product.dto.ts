@@ -44,7 +44,7 @@ export class CreateProductDto {
 
   @ApiProperty({ 
     description: 'Estado del producto', 
-    example: ProductStatus.ACTIVE,
+    example: ProductStatus.IN_STOCK,
     enum: ProductStatus,
     required: false 
   })

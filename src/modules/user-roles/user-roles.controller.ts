@@ -1,46 +1,13 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { UserRolesService } from './user-roles.service';
-import { CreateUserRoleDto } from './dto/create-user-role.dto';
-import { UpdateUserRoleDto } from './dto/update-user-role.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { BaseController } from 'src/common/controllers/base.controller';
+import { UserRole } from './user-role.entity';
 
+@ApiTags('User Roles')
 @Controller('user-roles')
-export class UserRolesController {
-  constructor(private readonly userRolesService: UserRolesService) {}
-
-  @Post()
-  create(@Body(ValidationPipe) createUserRoleDto: CreateUserRoleDto) {
-    return this.userRolesService.create(createUserRoleDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.userRolesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userRolesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body(ValidationPipe) updateUserRoleDto: UpdateUserRoleDto,
-  ) {
-    return this.userRolesService.update(+id, updateUserRoleDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userRolesService.remove(+id);
+export class UserRolesController extends BaseController<UserRole> {
+  constructor(private readonly userRolesService: UserRolesService) {
+    super(userRolesService);
   }
 }

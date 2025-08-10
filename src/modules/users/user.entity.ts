@@ -7,11 +7,11 @@ import { ProductAssignment } from '../product-assignments/product-assignment.ent
 
 @Table({
   tableName: 'users',
-  timestamps: true, // Habilita timestamps
-  paranoid: true, // Habilita borrado lógico
-  deletedAt: 'deleted_at', // Especifica el campo para borrado lógico
-  createdAt: 'created_at', // Especifica el campo de creación
-  updatedAt: 'updated_at', // Especifica el campo de actualización
+  timestamps: true, // Enable timestamps
+  paranoid: true, // Enable soft delete
+  deletedAt: 'deleted_at', // Specify the field for soft delete
+  createdAt: 'created_at', // Specify the field for creation
+  updatedAt: 'updated_at', // Specify the field for update
 })
 export class User extends BaseEntity {
   @ApiProperty({ description: 'Nombre del usuario', example: 'Juan Pérez' })
@@ -43,7 +43,7 @@ export class User extends BaseEntity {
   })
   declare password: string;
 
-  // Relaciones
+  // Relations
   @ApiProperty({ description: 'Roles asignados al usuario', type: () => [UserRole], required: false })
   @HasMany(() => UserRole, { foreignKey: 'user_id', as: 'userRoles' })
   declare userRoles: UserRole[];

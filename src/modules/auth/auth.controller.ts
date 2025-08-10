@@ -6,9 +6,8 @@ import { RegisterDto } from './dto/register.dto';
 import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { AuthThrottle, QueryThrottle } from '../../common/decorators/throttle.decorators';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-@ApiTags('auth')
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -71,7 +70,6 @@ export class AuthController {
     return this.authService.register(registerDto);
   }
 
-  @UseGuards(JwtAuthGuard)
   @QueryThrottle()
   @Get('profile')
   @ApiBearerAuth('JWT-auth')

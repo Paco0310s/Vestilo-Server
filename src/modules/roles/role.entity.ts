@@ -5,11 +5,11 @@ import { UserRole } from '../user-roles/user-role.entity';
 
 @Table({
   tableName: 'roles',
-  timestamps: true, // Habilita timestamps
-  paranoid: true, // Habilita borrado lógico
-  deletedAt: 'deleted_at', // Especifica el campo para borrado lógico
-  createdAt: 'created_at', // Especifica el campo de creación
-  updatedAt: 'updated_at', // Especifica el campo de actualización
+  timestamps: true, // Enable timestamps
+  paranoid: true, // Enable soft delete
+  deletedAt: 'deleted_at', // Specify the field for soft delete
+  createdAt: 'created_at', // Specify the field for creation
+  updatedAt: 'updated_at', // Specify the field for update
 })
 export class Role extends BaseEntity {
   @ApiProperty({ description: 'Nombre del rol', example: 'Administrador' })
@@ -17,10 +17,10 @@ export class Role extends BaseEntity {
     type: DataType.STRING,
     allowNull: false,
   })
-  name: string;
+  declare name: string;
 
-  // Relaciones
+  // Relations
   @ApiProperty({ description: 'Usuarios que tienen este rol', type: () => [UserRole], required: false })
   @HasMany(() => UserRole, { foreignKey: 'role_id', as: 'userRoles' })
-  userRoles: UserRole[];
+  declare userRoles: UserRole[];
 }

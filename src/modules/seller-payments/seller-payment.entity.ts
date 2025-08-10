@@ -9,17 +9,17 @@ export class SellerPayment extends BaseEntity {
     type: DataType.BIGINT,
     allowNull: true,
   })
-  user_id: number;
+  declare user_id: number;
 
   @Column({
     type: DataType.DECIMAL(10, 2),
     allowNull: true,
   })
-  amount: number;
+  declare amount: number;
 
   @Column({
     type: DataType.DATE,
     allowNull: true,
   })
-  paid_at: Date;
+  declare paid_at: Date;
 }

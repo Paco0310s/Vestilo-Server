@@ -9,14 +9,13 @@ import { UserRolesModule } from './modules/user-roles/user-roles.module';
 import { ProductsModule } from './modules/products/products.module';
 import { SalesModule } from './modules/sales/sales.module';
 import { FilesModule } from './modules/files/files.module';
-import { BarcodesModule } from './modules/barcodes/barcodes.module';
 import { ProductsImagesModule } from './modules/products-images/products-images.module';
 import { SellerPaymentsModule } from './modules/seller-payments/seller-payments.module';
-import { BarcodeAssignmentsModule } from './modules/barcode-assignments/barcode-assignments.module';
 import { ProductAssignmentsModule } from './modules/product-assignments/product-assignments.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SmartThrottlerGuard } from './common/guards/smart-throttler.guard';
-import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
+import { envs } from './common/config/envs';
+import { AuthGuard } from './modules/auth/guards/auth.guard';
 
 @Module({
   imports: [
@@ -42,11 +41,11 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
     ]),
     SequelizeModule.forRoot({
       dialect: 'mysql',
-      host: process.env.DB_HOST || 'localhost',
-      port: parseInt(process.env.DB_PORT || '3306'),
-      username: process.env.DB_USERNAME || 'root',
-      password: process.env.DB_PASSWORD || '',
-      database: process.env.DB_NAME || 'vestilo_db',
+      host: envs.db.host,
+      port: envs.db.port,
+      username: envs.db.username,
+      password: envs.db.password,
+      database: envs.db.name,
       autoLoadModels: true,
       synchronize: true, // Solo para desarrollo
       define: {
@@ -61,17 +60,15 @@ import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
     ProductsModule,
     SalesModule,
     FilesModule,
-    BarcodesModule,
     ProductsImagesModule,
     SellerPaymentsModule,
-    BarcodeAssignmentsModule,
     ProductAssignmentsModule,
     AuthModule,
   ],
-  providers: [
+   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useClass: AuthGuard,
     },
     {
       provide: APP_GUARD,

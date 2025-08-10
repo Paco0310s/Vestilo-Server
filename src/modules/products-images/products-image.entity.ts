@@ -5,6 +5,11 @@ import { File } from '../files/file.entity';
 
 @Table({
   tableName: 'products_images',
+  timestamps: true, // Enable timestamps
+  paranoid: true, // Enable soft delete
+  deletedAt: 'deleted_at', // Specify the field for soft delete
+  createdAt: 'created_at', // Specify the field for creation
+  updatedAt: 'updated_at', // Specify the field for update
 })
 export class ProductsImage extends BaseEntity {
   @ForeignKey(() => Product)
@@ -12,19 +17,19 @@ export class ProductsImage extends BaseEntity {
     type: DataType.BIGINT,
     allowNull: true,
   })
-  product_id: number;
+  declare product_id: number;
 
   @ForeignKey(() => File)
   @Column({
     type: DataType.BIGINT,
     allowNull: true,
   })
-  file_id: number;
+  declare file_id: number;
 
-  // Relaciones
+  // Relations
   @BelongsTo(() => Product, { foreignKey: 'product_id', as: 'product' })
-  product: Product;
+  declare product: Product;
 
   @BelongsTo(() => File, { foreignKey: 'file_id', as: 'file' })
-  file: File;
+  declare file: File;
 }

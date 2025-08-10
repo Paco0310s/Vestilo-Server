@@ -1,46 +1,13 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { FilesService } from './files.service';
-import { CreateFileDto } from './dto/create-file.dto';
-import { UpdateFileDto } from './dto/update-file.dto';
+import { ApiTags } from '@nestjs/swagger';
+import { BaseController } from 'src/common/controllers/base.controller';
+import { File } from './file.entity';
 
+@ApiTags('Files')
 @Controller('files')
-export class FilesController {
-  constructor(private readonly filesService: FilesService) {}
-
-  @Post()
-  create(@Body(ValidationPipe) createFileDto: CreateFileDto) {
-    return this.filesService.create(createFileDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.filesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.filesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body(ValidationPipe) updateFileDto: UpdateFileDto,
-  ) {
-    return this.filesService.update(+id, updateFileDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.filesService.remove(+id);
+export class FilesController extends BaseController<File> {
+  constructor(private readonly filesService: FilesService) {
+    super(filesService);
   }
 }
