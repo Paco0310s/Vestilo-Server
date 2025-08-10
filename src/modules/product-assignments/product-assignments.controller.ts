@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, ParseIntPipe, Req } from '@nestjs/common';
 import { ProductAssignmentsService } from './product-assignments.service';
 import { CreateProductAssignmentDto } from './dto/create-product-assignment.dto';
 import { UpdateProductAssignmentDto } from './dto/update-product-assignment.dto';
 import { ApiTags, ApiBody } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { ProductAssignment } from './product-assignment.entity';
+import { Request } from 'express';
 
 @ApiTags('Product Assignments')
 @Controller('product-assignments')
@@ -18,8 +19,8 @@ export class ProductAssignmentsController extends BaseController<ProductAssignme
     type: CreateProductAssignmentDto,
     description: 'Datos para asignar un producto a un usuario'
   })
-  create(@Body() createProductAssignmentDto: CreateProductAssignmentDto) {
-    return super.create(createProductAssignmentDto);
+  create(@Body() createProductAssignmentDto: CreateProductAssignmentDto, @Req() request: Request & { auditData?: any }) {
+    return super.create(createProductAssignmentDto, request);
   }
 
   @Patch(':id')
@@ -27,7 +28,7 @@ export class ProductAssignmentsController extends BaseController<ProductAssignme
     type: UpdateProductAssignmentDto,
     description: 'Datos para actualizar la asignación del producto'
   })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateProductAssignmentDto: UpdateProductAssignmentDto) {
-    return super.update(id, updateProductAssignmentDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateProductAssignmentDto: UpdateProductAssignmentDto, @Req() request: Request & { auditData?: any }) {
+    return super.update(id, updateProductAssignmentDto, request);
   }
 }

@@ -1,8 +1,9 @@
-import { Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query, UseInterceptors } from '@nestjs/common';
+import { Get, Post, Body, Patch, Param, Delete, ParseIntPipe, Query, UseInterceptors, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery, ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { BaseService } from '../services/base.service';
 import { BaseEntity } from '../entities/base.entity';
 import { AuditInterceptor } from '../interceptors/audit.interceptor';
+import { Request } from 'express';
 
 @UseInterceptors(AuditInterceptor)
 @ApiBearerAuth()
@@ -13,8 +14,9 @@ export abstract class BaseController<T extends BaseEntity, CreateDto = any, Upda
   @ApiOperation({ summary: 'Crear un nuevo registro' })
   @ApiResponse({ status: 201, description: 'Registro creado exitosamente' })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
-  create(@Body() createDto: CreateDto) {
-    return this.service.create(createDto);
+  create(@Body() createDto: CreateDto, @Req() request: Request & { auditData?: any }) {
+    const userId = request.auditData?.created_by;
+    return this.service.create(createDto, userId);
   }
 
   @Get()
@@ -65,8 +67,9 @@ export abstract class BaseController<T extends BaseEntity, CreateDto = any, Upda
   @ApiResponse({ status: 200, description: 'Registro actualizado exitosamente' })
   @ApiResponse({ status: 404, description: 'Registro no encontrado' })
   @ApiResponse({ status: 400, description: 'Datos inválidos' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateDto) {
-    return this.service.update(id, updateDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateDto: UpdateDto, @Req() request: Request & { auditData?: any }) {
+    const userId = request.auditData?.updated_by;
+    return this.service.update(id, updateDto, userId);
   }
 
   @Delete(':id')

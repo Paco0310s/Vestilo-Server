@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, ParseIntPipe, Req } from '@nestjs/common';
 import { SellerPaymentsService } from './seller-payments.service';
 import { CreateSellerPaymentDto } from './dto/create-seller-payment.dto';
 import { UpdateSellerPaymentDto } from './dto/update-seller-payment.dto';
 import { ApiTags, ApiBody } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { SellerPayment } from './seller-payment.entity';
+import { Request } from 'express';
 
 @ApiTags('Seller Payments')
 @Controller('seller-payments')
@@ -18,8 +19,8 @@ export class SellerPaymentsController extends BaseController<SellerPayment, Crea
     type: CreateSellerPaymentDto,
     description: 'Datos para registrar un nuevo pago a vendedor'
   })
-  create(@Body() createSellerPaymentDto: CreateSellerPaymentDto) {
-    return super.create(createSellerPaymentDto);
+  create(@Body() createSellerPaymentDto: CreateSellerPaymentDto, @Req() request: Request & { auditData?: any }) {
+    return super.create(createSellerPaymentDto, request);
   }
 
   @Patch(':id')
@@ -27,7 +28,7 @@ export class SellerPaymentsController extends BaseController<SellerPayment, Crea
     type: UpdateSellerPaymentDto,
     description: 'Datos para actualizar el pago del vendedor'
   })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateSellerPaymentDto: UpdateSellerPaymentDto) {
-    return super.update(id, updateSellerPaymentDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateSellerPaymentDto: UpdateSellerPaymentDto, @Req() request: Request & { auditData?: any }) {
+    return super.update(id, updateSellerPaymentDto, request);
   }
 }

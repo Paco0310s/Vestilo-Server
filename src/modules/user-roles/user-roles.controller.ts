@@ -1,10 +1,11 @@
-import { Controller, Post, Body, Patch, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Post, Body, Patch, Param, ParseIntPipe, Req } from '@nestjs/common';
 import { UserRolesService } from './user-roles.service';
 import { ApiTags, ApiBody } from '@nestjs/swagger';
 import { BaseController } from 'src/common/controllers/base.controller';
 import { UserRole } from './user-role.entity';
 import { CreateUserRoleDto } from './dto/create-user-role.dto';
 import { UpdateUserRoleDto } from './dto/update-user-role.dto';
+import { Request } from 'express';
 
 @ApiTags('User Roles')
 @Controller('user-roles')
@@ -18,8 +19,8 @@ export class UserRolesController extends BaseController<UserRole, CreateUserRole
     type: CreateUserRoleDto,
     description: 'Datos para asignar un rol a un usuario'
   })
-  create(@Body() createUserRoleDto: CreateUserRoleDto) {
-    return super.create(createUserRoleDto);
+  create(@Body() createUserRoleDto: CreateUserRoleDto, @Req() request: Request & { auditData?: any }) {
+    return super.create(createUserRoleDto, request);
   }
 
   @Patch(':id')
@@ -27,7 +28,7 @@ export class UserRolesController extends BaseController<UserRole, CreateUserRole
     type: UpdateUserRoleDto,
     description: 'Datos para actualizar la asignación de rol'
   })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserRoleDto: UpdateUserRoleDto) {
-    return super.update(id, updateUserRoleDto);
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateUserRoleDto: UpdateUserRoleDto, @Req() request: Request & { auditData?: any }) {
+    return super.update(id, updateUserRoleDto, request);
   }
 }
