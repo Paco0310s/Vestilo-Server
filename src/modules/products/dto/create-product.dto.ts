@@ -22,16 +22,6 @@ export class CreateProductDto {
   @IsString()
   size?: string;
 
-  @ApiProperty({ description: 'Marca del producto', example: 'Nike', required: false })
-  @IsOptional()
-  @IsString()
-  brand?: string;
-
-  @ApiProperty({ description: 'Categoría del producto', example: 'Ropa deportiva', required: false })
-  @IsOptional()
-  @IsString()
-  category?: string;
-
   @ApiProperty({ description: 'Precio de compra', example: 25.50, required: false })
   @IsOptional()
   @IsNumber()
