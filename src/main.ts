@@ -5,9 +5,12 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 import { globalValidationPipe } from './common/pipes/global-validation.pipe';
 import { envs } from './common/config/envs';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  
+  app.setGlobalPrefix('api');
   
   // CORS para permitir conexiones del frontend
   app.enableCors({
@@ -24,6 +27,8 @@ async function bootstrap() {
   // Pipes de validación global
   app.useGlobalPipes(globalValidationPipe);
   
+  // Archivos estáticos servidos vía ServeStaticModule (ver AppModule)
+
   // Configuración de Swagger
   const config = new DocumentBuilder()
     .setTitle('Vestilo API')

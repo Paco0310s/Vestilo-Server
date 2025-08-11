@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { APP_GUARD } from '@nestjs/core';
@@ -21,6 +23,11 @@ import { AuthGuard } from './modules/auth/guards/auth.guard';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    // Servir archivos estáticos subidos localmente
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'uploads'),
+      serveRoot: '/uploads',
     }),
     ThrottlerModule.forRoot([
       {
