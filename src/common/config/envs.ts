@@ -14,6 +14,7 @@ interface EnvVars {
   JWT_SECRET: string;
   JWT_EXPIRES_IN: string;
   ALLOWED_ORIGINS: string[];
+  URL: string;
 }
 
 const envsSchema = joi.object({
@@ -28,6 +29,7 @@ const envsSchema = joi.object({
   JWT_SECRET: joi.string().required(),
   JWT_EXPIRES_IN: joi.string().default('30d'),
   ALLOWED_ORIGINS: joi.array().items(joi.string()).required(),
+  URL: joi.string().uri().required(),
 })
 .unknown(true);
 
@@ -60,4 +62,5 @@ export const envs = {
     expiresIn: envVars.JWT_EXPIRES_IN,
   },
   allowedOrigins: envVars.ALLOWED_ORIGINS,
+  url: envVars.URL,
 }

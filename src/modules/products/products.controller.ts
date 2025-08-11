@@ -65,17 +65,36 @@ export class ProductsController extends BaseController<Product, CreateProductDto
   })
   async createWithImages(
     @Body() body: any,
-  @UploadedFiles() images: Express.Multer.File[],
+    @UploadedFiles() images: Express.Multer.File[],
     @Req() request: Request & { auditData?: any }
   ) {
-    // Primero creamos el producto
-    const product = await super.create(body, request);
+    console.log('[ProductsController] createWithImages body:', body);
+    console.log('[ProductsController] createWithImages images:', images?.length || 0);
 
-    // Guardamos referencias a archivos si hay imágenes
+    // Normalizar y forzar tipos (números) para evitar guardar strings
+    const normalized: any = {
+      name: body.name,
+      description: body.description ?? null,
+      color: body.color,
+      size: body.size ?? null,
+      purchase_price: body.purchase_price !== undefined ? Number(body.purchase_price) : undefined,
+      sale_price: body.sale_price !== undefined ? Number(body.sale_price) : undefined,
+      status: body.status,
+    };
+
+    // Validación mínima manual en caso de multipart
+    if (!normalized.name || !normalized.color || !normalized.purchase_price || !normalized.sale_price) {
+      throw new Error('Campos requeridos faltantes (name, color, purchase_price, sale_price)');
+    }
+
+    const product = await super.create(normalized, request);
+
     if (images && images.length) {
       await this.productsService.attachImages(product.id, images);
     }
-    return this.productsService.findOne(product.id);
+
+    const saved = await this.productsService.findOne(product.id);
+    return saved;
   }
 
   @Patch(':id')

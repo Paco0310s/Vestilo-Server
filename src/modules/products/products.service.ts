@@ -6,6 +6,7 @@ import { File } from '../files/file.entity';
 import { ProductsImage } from '../products-images/products-image.entity';
 import { InjectModel as InjectSequelizeModel } from '@nestjs/sequelize';
 import { Sequelize } from 'sequelize-typescript';
+import { envs } from 'src/common/config/envs';
 
 @Injectable()
 export class ProductsService extends BaseService<Product> {
@@ -29,7 +30,7 @@ export class ProductsService extends BaseService<Product> {
         extension: img.originalname.split('.').pop(),
         size: img.size,
         path: `/uploads/products/${img.filename}`,
-        bucket: 'local'
+        bucket: envs.url,
       });
       await (this.productsImageModel as any).create({
         product_id: productId,
