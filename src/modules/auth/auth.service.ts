@@ -24,7 +24,6 @@ export class AuthService {
 
       return null;
     } catch (error) {
-      console.error('💥 Error in validateUser:', error.message);
       return null;
     }
   }

@@ -8,26 +8,35 @@ export class AuditInterceptor implements NestInterceptor {
     const request = context.switchToHttp().getRequest();
     const method = request.method;
     
-    // En una implementación real, obtendrías el usuario del JWT token
-    // Por ahora usaremos un usuario por defecto para demostración
-    const userId = request.user?.id || 1; // Usuario por defecto para demo
+    // Obtener el usuario del JWT token si está disponible
+    const userId = request.user?.id;
     
-    // No modificamos el request.body aquí para evitar conflictos con la validación
-    // En su lugar, guardamos la información de auditoría en el request
-    if (method === 'POST') {
-      request.auditData = {
-        created_by: userId,
-        updated_by: userId
-      };
-    } else if (method === 'PATCH' || method === 'PUT') {
-      request.auditData = {
-        updated_by: userId
-      };
+    // Solo establecer auditData si hay un usuario autenticado
+    if (userId) {
+      if (method === 'POST') {
+        request.auditData = {
+          created_by: userId,
+          updated_by: userId,
+          user_id: userId
+        };
+      } else if (method === 'PATCH' || method === 'PUT') {
+        request.auditData = {
+          updated_by: userId,
+          user_id: userId
+        };
+      } else {
+        // Para GET y otros métodos, solo establecer user_id
+        request.auditData = {
+          user_id: userId
+        };
+      }
+    } else {
+      // Si no hay usuario autenticado, no establecer auditData
+      request.auditData = undefined;
     }
 
     return next.handle().pipe(
       map((data) => {
-        console.log(`Audit: ${method} ${request.url} by user ${userId}`);
         return data;
       }),
     );

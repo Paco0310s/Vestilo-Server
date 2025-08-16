@@ -2,15 +2,13 @@ import { IsOptional, IsNumber, IsDateString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProductAssignmentDto {
-  @ApiProperty({ description: 'ID del usuario asignado', example: 1, required: false })
-  @IsOptional()
+  @ApiProperty({ description: 'ID del usuario asignado', example: 1 })
   @IsNumber()
-  user_id?: number;
+  user_id: number;
 
-  @ApiProperty({ description: 'ID del producto asignado', example: 1, required: false })
-  @IsOptional()
+  @ApiProperty({ description: 'ID del producto asignado', example: 1 })
   @IsNumber()
-  product_id?: number;
+  product_id: number;
 
   @ApiProperty({ description: 'Fecha de asignación', example: '2024-01-01T10:00:00Z', required: false })
   @IsOptional()

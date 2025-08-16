@@ -56,6 +56,14 @@ export class Sale extends BaseEntity {
   })
   declare comision_paid: boolean;
 
+  // Método de pago (cash, card, transfer)
+  @Column({
+    type: DataType.ENUM('cash', 'card', 'transfer'),
+    allowNull: true,
+    field: 'payment_method',
+  })
+  declare payment_method: string;
+
   // Relations
   @BelongsTo(() => Product, { foreignKey: 'product_id', as: 'product' })
   declare product: Product;

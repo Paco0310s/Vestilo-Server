@@ -1,5 +1,5 @@
-import { Controller, Post, Body, Patch, Param, ParseIntPipe, Req, UploadedFiles, UseInterceptors } from '@nestjs/common';
-import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes } from '@nestjs/swagger';
+import { Controller, Post, Body, Patch, Param, ParseIntPipe, Req, UploadedFiles, UseInterceptors, Get, Query, BadRequestException } from '@nestjs/common';
+import { ApiTags, ApiBody, ApiBearerAuth, ApiConsumes, ApiQuery, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProductsService } from './products.service';
 import { BaseController } from '../../common/controllers/base.controller';
 import { Product, ProductStatus } from './product.entity';
@@ -16,6 +16,55 @@ import { extname } from 'path';
 export class ProductsController extends BaseController<Product, CreateProductDto, UpdateProductDto> {
   constructor(private readonly productsService: ProductsService) {
     super(productsService);
+  }
+
+  // Sobrescribir findAll para manejar filtros adicionales
+  @Get()
+  @ApiOperation({ summary: 'Obtener todos los productos con filtros opcionales' })
+  @ApiQuery({ 
+    name: 'include_deleted', 
+    required: false, 
+    description: 'Incluir registros eliminados (soft delete)',
+    type: 'string',
+    enum: ['true', 'false']
+  })
+  @ApiQuery({ 
+    name: 'status', 
+    required: false, 
+    description: 'Filtrar por estado del producto',
+    enum: ProductStatus
+  })
+  @ApiQuery({ 
+    name: 'search', 
+    required: false, 
+    description: 'Buscar por nombre o descripción del producto',
+    type: 'string'
+  })
+  @ApiQuery({ 
+    name: 'page', 
+    required: false, 
+    description: 'Página de resultados',
+    type: 'number'
+  })
+  @ApiQuery({ 
+    name: 'limit', 
+    required: false, 
+    description: 'Límite de resultados por página',
+    type: 'number'
+  })
+  @ApiResponse({ status: 200, description: 'Lista de productos obtenida exitosamente' })
+  findAll(
+    @Query('include_deleted') includeDeleted?: string,
+    @Query('status') status?: ProductStatus,
+    @Query('search') search?: string,
+    @Query('page') page?: string,
+    @Query('limit') limit?: string
+  ) {
+    const include = includeDeleted === 'true';
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 20;
+    
+    return this.productsService.findAllWithFilters(include, status, search, pageNum, limitNum);
   }
 
   @Post()
@@ -68,9 +117,6 @@ export class ProductsController extends BaseController<Product, CreateProductDto
     @UploadedFiles() images: Express.Multer.File[],
     @Req() request: Request & { auditData?: any }
   ) {
-    console.log('[ProductsController] createWithImages body:', body);
-    console.log('[ProductsController] createWithImages images:', images?.length || 0);
-
     // Normalizar y forzar tipos (números) para evitar guardar strings
     const normalized: any = {
       name: body.name,
@@ -105,4 +151,46 @@ export class ProductsController extends BaseController<Product, CreateProductDto
   update(@Param('id', ParseIntPipe) id: number, @Body() updateProductDto: UpdateProductDto, @Req() request: Request & { auditData?: any }) {
     return super.update(id, updateProductDto, request);
   }
+
+  @Get('status')
+  async getStatuses(@Query('ids') idsParam?: string) {
+    if (!idsParam) throw new BadRequestException('ids es requerido, separado por comas');
+    const ids = idsParam.split(',').map((x) => parseInt(x, 10)).filter((n) => !isNaN(n));
+    if (!ids.length) throw new BadRequestException('ids inválidos');
+    return this.productsService.findStatusesByIds(ids);
+  }
+
+  @Get('assigned')
+  @ApiOperation({ summary: 'Obtener productos asignados al usuario actual' })
+  @ApiQuery({ 
+    name: 'page', 
+    required: false, 
+    description: 'Página de resultados',
+    type: 'number'
+  })
+  @ApiQuery({ 
+    name: 'limit', 
+    required: false, 
+    description: 'Límite de resultados por página',
+    type: 'number'
+  })
+  @ApiResponse({ status: 200, description: 'Lista de productos asignados obtenida exitosamente' })
+  async getAssignedProducts(
+    @Req() request: Request & { auditData?: any; user?: any },
+    @Query('page') page?: string,
+    @Query('limit') limit?: string
+  ) {
+    // Obtener el ID del usuario autenticado
+    const userId = request.user?.id || request.auditData?.user_id;
+    
+    if (!userId) {
+      throw new BadRequestException('Usuario no autenticado. Por favor, inicia sesión.');
+    }
+    
+    const pageNum = page ? parseInt(page, 10) : 1;
+    const limitNum = limit ? parseInt(limit, 10) : 20;
+    
+    return this.productsService.findAssignedToUser(userId, pageNum, limitNum);
+  }
+
 }

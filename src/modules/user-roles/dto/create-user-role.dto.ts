@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsDecimal } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateUserRoleDto {
@@ -12,6 +12,6 @@ export class CreateUserRoleDto {
 
   @ApiProperty({ description: 'Porcentaje de comisión para este rol (0-100)', example: 15.5, required: false })
   @IsOptional()
-  @IsDecimal()
+  @IsNumber()
   comission_percent?: number;
 }

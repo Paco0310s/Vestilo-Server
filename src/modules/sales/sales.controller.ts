@@ -18,7 +18,17 @@ export class SalesController extends BaseController<Sale, CreateSaleDto, UpdateS
   @Post()
   @ApiBody({ 
     type: CreateSaleDto,
-    description: 'Datos para registrar una nueva venta'
+    description: 'Datos para registrar una nueva venta. payment_method: cash | card | transfer',
+    examples: {
+      ventaEfectivo: {
+        summary: 'Venta en efectivo',
+        value: { product_id: 10, user_id: 3, sale_price: 250.00, payment_method: 'cash' }
+      },
+      ventaTarjeta: {
+        summary: 'Venta con tarjeta',
+        value: { product_id: 11, user_id: 3, sale_price: 499.99, payment_method: 'card' }
+      }
+    }
   })
   create(@Body() createSaleDto: CreateSaleDto, @Req() request: Request & { auditData?: any }) {
     return super.create(createSaleDto, request);

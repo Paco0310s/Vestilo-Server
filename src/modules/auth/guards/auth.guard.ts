@@ -42,8 +42,6 @@ export class AuthGuard implements CanActivate {
         exp: payload.exp,
       };
 
-      console.log('request.user:', request.user);
-
       const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
         context.getHandler(),
         context.getClass(),
@@ -53,20 +51,16 @@ export class AuthGuard implements CanActivate {
         return true;
       }
 
-      console.log('requiredRoles:', requiredRoles);
-
       // Check if the user has the required roles
       const hasRole = () => {
         return requiredRoles.some((role) => request.user.role === role);
       };
 
-      console.log('hasRole:', hasRole());
-
       if (!hasRole()) {
         throw new UnauthorizedException('No tienes permiso para acceder a este recurso');
       }
 
-    } catch {
+    } catch (error) {
       throw new UnauthorizedException('No autorizado');
     }
 
