@@ -6,9 +6,10 @@ import { Sale } from './sale.entity';
 import { Product } from '../products/product.entity';
 import { ProductAssignment } from '../product-assignments/product-assignment.entity';
 import { UserRole } from '../user-roles/user-role.entity';
+import { User } from '../users/user.entity';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Sale, Product, ProductAssignment, UserRole])],
+  imports: [SequelizeModule.forFeature([Sale, Product, ProductAssignment, UserRole, User])],
   controllers: [SalesController],
   providers: [SalesService],
   exports: [SalesService],
