@@ -72,7 +72,7 @@ async function bootstrap() {
       },
       'JWT-auth', // Este es el nombre de referencia para usar en @ApiBearerAuth()
     )
-    .addServer('http://localhost:3200', 'Servidor de Desarrollo')
+    .addServer(envs.url, 'Servidor de Desarrollo')
     .addServer('https://vestilo.pacosotelo.com', 'Servidor de Producción')
     .build();
   
@@ -92,7 +92,7 @@ async function bootstrap() {
   });
 
   console.log(`🚀 Servidor iniciado en puerto ${envs.port}`);
-  console.log(`📚 Documentación disponible en http://localhost:${envs.port}/api/docs`);
+  console.log(`📚 Documentación disponible en ${envs.url}/api/docs`);
 
   await app.listen(envs.port);
 }
