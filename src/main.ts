@@ -14,8 +14,9 @@ async function bootstrap() {
   
   // CORS para permitir conexiones del frontend
   app.enableCors({
-    origin: envs.allowedOrigins,
-    credentials: true,
+    // origin: envs.allowedOrigins,
+    // credentials: true,
+    origin: '*'
   });
 
   // Filtros globales
