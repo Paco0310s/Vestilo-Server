@@ -9,6 +9,8 @@ services:
       - .env
     networks:
       - red_base_de_datos
+    volumes:
+      - ./uploads:/app/uploads
 
 networks:
   red_base_de_datos:
